@@ -4,7 +4,7 @@
 ## Lo primero es Crear API Token en Cloudflare
 
 
-![[Pasted image 20260227114855.png]]
+![[Pasted image 20260227114855.png]](https://github.com/RandelMB/Proyectos_Infraestructura/blob/main/img/Pasted%20image%2020260227114855.png)
 
 
 
