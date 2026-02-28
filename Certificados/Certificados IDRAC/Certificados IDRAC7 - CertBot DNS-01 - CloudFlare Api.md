@@ -4,7 +4,7 @@
 ## Lo primero es Crear API Token en Cloudflare
 
 
-![[Pasted image 20260227114855.png]](https://github.com/RandelMB/Proyectos_Infraestructura/blob/main/img/Pasted%20image%2020260227114855.png)
+![[20260227114855.png]](https://github.com/RandelMB/Proyectos_Infraestructura/blob/main/img/Pasted%20image%2020260227114855.png)
 
 
 
@@ -12,11 +12,11 @@
 
 
 
-![[Pasted image 20260227115027.png]]
+![[Pasted image 20260227115027.png]](https://github.com/RandelMB/Proyectos_Infraestructura/blob/main/img/Pasted%20image%2020260227115027.png)
 
 
 
-![[Pasted image 20260227115341.png]]
+![[Pasted image 20260227115341.png]](https://github.com/RandelMB/Proyectos_Infraestructura/blob/main/img/Pasted%20image%2020260227115341.png)
 
 
 ```python
@@ -58,11 +58,11 @@ Verifying - Enter Export Password:
 ```
 ### en mi caso yo utilicé el protocolo SFTP (bitvirse) para transferirlo a Windows también puedes usara Wincsp o filezilla
 
-![[Pasted image 20260227123645.png]]
+![[Pasted image 20260227123645.png]](https://github.com/RandelMB/Proyectos_Infraestructura/blob/main/img/Pasted%20image%2020260227123645.png)
 
 
 #### Carac
 
-![[Pasted image 20260227123925.png]]
+![[Pasted image 20260227123925.png]](https://github.com/RandelMB/Proyectos_Infraestructura/blob/main/img/Pasted%20image%20260227123925.png)
 
 
