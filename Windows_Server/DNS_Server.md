@@ -1,3 +1,13 @@
+
+```sh
+✅# **2. Verificar que las ZONAS DNS existen**
+
+Get-Service DNS
+Start-Service DNS
+
+Get-DnsServerZone
+```
+
 ####  Crear la zona inversa
 ```powershell
 Add-DnsServerPrimaryZone -NetworkID "192.168.10.0/24" -ReplicationScope "Domain"

@@ -65,7 +65,7 @@ netstat -n
 netstat -an
 ```
 
-```
+```sh
 # IDENTIFICACION DE PROCESOS
 # ===============================
 

@@ -29,3 +29,30 @@ config router static
     next
 end
 ```
+
+
+
+###  IPsec Tunel
+```Python
+# Diagnostico Troubleshooting
+diagnose sniffer packet any 'udp and (port 500 or port 4500)' 4	Captura de paquetes
+get vpn ipsec tunnel summary	
+diagnose vpn ike gateway list	
+diagnose vpn tunnel list	
+	
+diagnose debug enable	Habilitar logs en vivo
+diagnose debug application ike -1	Habilitar logs en vivo
+diagnose debug disable	Parar logs en vivo
+
+```
+
+### Snifing (Captura de paquetes)
+
+```
+
+diagnose sniffer packet any 'host 172.16.0.242 and port 500' 4
+
+```
+
+### Firewall Rule
+

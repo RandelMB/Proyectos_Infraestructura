@@ -1,26 +1,19 @@
 
 
+```c
 # Activación de Windows
-
 https://massgrave.dev/
-
-
+```
 
 # impresoras
 ```sh
-
 # Listado de print
 wmic printer list brief
 printui.exe /s /t2
 
 # eliminar Impresoras
 printui.exe /dl /n "NombreImpresora"
-
-
 ```
-
-
-
 
 # Redes
 ```sh
@@ -29,24 +22,21 @@ curl portquiz.net:22
 
 curl -4 ifconfig.me
 
-----------------------------
-
-
-netstat -abno
+# Tabla de ARP
 arp -a
+
+# Tabla de Rutas
 route print
 
 ------------
 
-
-
-## vaciar la caché DNS
 
 nslookup youtube.com
 nslookup youtube.com 1.1.1.1
 
 while ($true) { nslookup youtube.com 1.1.1.1; Start-Sleep -Seconds 2 }
 while ($true) { nslookup youtube.com 10.0.1.10; Start-Sleep -Seconds 2 }
+## vaciar la caché DNS
 
 ipconfig /flushdns
 
@@ -77,48 +67,32 @@ netsh interface ip add dns "NombreDeTuInterfaz" 8.8.8.8 index=2
 -------------------------------
 
 ## Ruta de Dns
-
-
 - En Linux/macOS: `/etc/hosts`
     
 - En Windows: 
   C:\Windows\System32\drivers\etc\hosts
-
-
 ```
-
-
 
 ## Comando general para grabar pantalla en Windows con ffmpeg
-
 ```
-
 ffmpeg -f gdigrab -framerate 30 -video_size 1920x1080 -i desktop -c:v libx264 -preset ultrafast -crf 18 -pix_fmt yuv420p "E:\DESCARGAS\VIDEO\TUTORIALES\grabacion_1080p3.mp4"
-
-
 ```
 
 
 ## DiskPart Modo lectura o escritura
-
-
 ```
-
 select disk 1
 
 attributes disk set readonly
 
 attributes disk clear readonly
-
 ```
 
 
 
 
 ## Generar la clave SSH desde Window
-
 ```python
-
 # --GENERADOR DE LLAVES (SELECCIONA 1)-- #
 ssh-keygen -t rsa -b 4096 -C "ejemp@ejemplo.com"
 ssh-keygen -t ecdsa -b 521 -f ~/.ssh/id_ecdsa_521
@@ -130,13 +104,10 @@ type $env:USERPROFILE\.ssh\id_rsa.pub
 
 
 # -- EN UBUNTU --#
-
 chmod 700 ~/.ssh/authorized_keys
 
 nano ~/.ssh/authorized_keys
 sudo systemctl restart ssh
-
-
 ```
 
 
@@ -150,10 +121,7 @@ sudo systemctl restart ssh
 | **CER / CRT**     | `.cer`, `.crt`                                               | Windows, Linux                        | Certificados públicos; no contienen la clave privada.                             |
 | **DER**           | `.der`                                                       | Java, OpenSSL                         | Formato binario de certificado; alternativa a PEM.                                |
 
-
-
 ## Ejecutar Comands
-
 ```python
 gpedit.msc #– Editor de políticas de grupo local
 eventvwr.msc #– Visor de eventos
@@ -178,7 +146,7 @@ chkdsk #– Comprobar disco
 
 ## Power /(No Comprobado)
 
-```
+```c
 powercfg -change -standby-timeout-ac 0
 
 powercfg /hibernate off
@@ -241,7 +209,7 @@ shutdown /s /t 10200
 #Apagar en 3 horas (10800 segundos):
 shutdown /s /t 10800
 ```
-# Usuarios y Grupos Locales
+# Usuarios y Grupos Locales (CMD)
 ```sh
 query user     #-  Ver ususarios
 net users      #-  Ver ususarios
@@ -253,7 +221,6 @@ net config workstation
 -------------------------------------------------------------------------
 
 # Usuarios (net user)
-
 net user → Lista todas las cuentas  
 net user <usuario> → Muestra detalles  
 net user <usuario> <contraseña> → Cambia contraseña  
@@ -272,7 +239,6 @@ net user <usuario> /active:yes|no → Activar o desactivar
 /expires:never - sin fecha de caducidad
 
 # Grupos (net localgroup)
-
 net localgroup → Listar grupos  
 net localgroup <grupo> → Ver miembros  
 net localgroup /? → Ayuda
@@ -285,22 +251,16 @@ net localgroup <grupo> <usuario> /add → Agregar usuario
 net localgroup <grupo> <usuario> /delete → Quitar usuario
 
 # Ver grupos y membresías
-
 net user <usuario> → Ver grupos del usuario  
 net localgroup <grupo> → Ver miembros del grupo  
 net localgroup → Ver todos los grupos
 
-
 # Cuentas
-
 net accounts /maxpwage:30 - tiempo que puede estar sin logearse
 net accounts /minpwlen:10 - Longitud minisma para password
-
 ```
 
-
-# Domnio
-
+# Usuarios y Grupos Locales (Powershell)
 ```python
 # Renombrar Equipos 
 Rename-Computer -NewName "Tecnologia"
@@ -311,33 +271,19 @@ Add-Computer -WorkgroupName <nombre_del_Workgroup>
 Add-Computer -WorkgroupName W -Restart
 
 # Agregar al Dominio
-Add-Computer -DomainName <nombre_del_dominio>
-Add-Computer -DomainName arsfuturo.com.do -Restart
-Add-Computer -DomainName cybersupports.net -Restart 
------------------------------------------------------------------------
-
-# Crear Usuario Local
-net user Camila /add
-
-New-LocalUser -Name mercadeo -Password ([[Investigacion/Server/ConvertTo-SecureString.md|ConvertTo-SecureString]] "odontodom" -AsPlainText -Force)
+Add-Computer -DomainName <nombre_del_dominio> -Restart
 
 # -eliminar usuario
-
 Remove-LocalUser -Name "Estudiante"
----------------------------------------------------
-- cambiar usuario a administrador
 
-net localgroup Administrators odont /add
-
+# 
 Add-LocalGroupMember -Group "Administrators" -Member "mercadeo"
+```
 
----------------------------------------------------
-
-en caso de cerrar el explorador de archivos
+#### Troubleshuting
+```sh
+# en caso de cerrar el explorador de archivos
 start explorer.exe
-
-------------------------------------------------------
-
 ```
 
 # Window Update
@@ -368,19 +314,12 @@ wuauclt.exe /updatenow
 www.update.microsoft.com
 download.windowsupdate.com
 *.delivery.mp.microsoft.com
-
 ```
---------
-
 
 ## Asistente de Winodws 11 UPDATE
-
+```c
 https://go.microsoft.com/fwlink/?linkid=2171764
-
-
-
----------
-
+```
 
 # Script Startup /(No Probado)
  ```r
@@ -413,7 +352,6 @@ Register-ScheduledTask -Action $Action -Trigger $Trigger -TaskName "ForzarAudioP
 ```
 
 # Relación de confianza 
-
 ```r
 Test-ComputerSecureChannel
 
@@ -425,7 +363,6 @@ Reset-ComputerMachinePassword -Credential dfuturo\
 net stop w32time
 net start w32time
 w32tm /resync /force
-
 ```
 
 # Generar Certificado Windows
@@ -433,7 +370,6 @@ w32tm /resync /force
 # Descargar y entrar al directorio
 cd "E:\PROGRAMAS\WIN-ACME\"
 .\wacs.exe --target manual --host cybersupports.net,webmin.cybersupports.net --validation http-01 --validationmode selfhosting --store pemfiles --installation none --accepttos
-
 ```
 
 Explicación:
@@ -451,12 +387,8 @@ Explicación:
 - El certificado generado se renueva con tarea programada si quieres automatizar.
 - Los archivos `.pem` resultantes se pueden copiar a Linux/Webmin tal cual.
 
-
 # LLDP En Windows
-
-
 ```python
-
 # - INSTALAR -
 Install-Module -Name PSDiscoveryProtocol
 # o
@@ -470,21 +402,14 @@ $Packet = Invoke-DiscoveryProtocolCapture -Type LLDP -Duration 60 -Force
 
 Get-DiscoveryProtocolData -Packet $Packet
 
-
-
 # CDP
-
 [WinCDP-win32-2.0.0.zip - Google Drive](https://drive.google.com/file/d/17zrvlmHytYG4iwXjk5cxCFROg9TYLljg/view)
 
 # LLDP LinkSkippyl
 https://github.com/andkrau/LinkSkippy
-
 ```
 
 # Deteccion de Server DHCP
-
-```
+```c
 Install-WindowsFeature DHCP -IncludeManagementTools
-
-
 ```
