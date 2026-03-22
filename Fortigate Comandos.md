@@ -49,10 +49,38 @@ diagnose debug disable	Parar logs en vivo
 ### Snifing (Captura de paquetes)
 
 ```
-
 diagnose sniffer packet any 'host 172.16.0.242 and port 500' 4
-
 ```
 
 ### Firewall Rule
 
+
+### Virtual IP (PortFoward)
+```c
+
+    edit "RDP_TO_FILE"
+        set extip 172.16.0.241
+        set mappedip "10.0.2.100"
+        set extintf "port1"
+        set portforward enable
+        set extport 6001
+        set mappedport 3389
+    next
+end
+
+## -----Agregarlo a politica---------#
+config firewall policy
+    edit 4
+        set name "Yo_TO_RDP"
+        set srcintf "port1"
+        set dstintf "VLAN11"
+        set action accept
+        set srcaddr "all"
+        set dstaddr "RDP_TO_AD_DS" "RDP_TO_FILE" 
+        set schedule "always"
+        set service "RDP"
+        set logtraffic all
+        set nat enable
+    next
+end
+```

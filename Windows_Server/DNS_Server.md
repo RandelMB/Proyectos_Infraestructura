@@ -1,40 +1,55 @@
 
 ```sh
 ✅# **2. Verificar que las ZONAS DNS existen**
-
 Get-Service DNS
 Start-Service DNS
-
 Get-DnsServerZone
 ```
 
-####  Crear la zona inversa
+###  Crear la zona inversa
 ```powershell
 Add-DnsServerPrimaryZone -NetworkID "192.168.10.0/24" -ReplicationScope "Domain"
-```
 
-#### Crear 5 registros A
-```powershell
+# Crear registros A
 Add-DnsServerResourceRecordA -Name "pc1" -ZoneName "midominio.local" -IPv4Address "192.168.10.10"
-Add-DnsServerResourceRecordA -Name "pc2" -ZoneName "midominio.local" -IPv4Address "192.168.10.11"
-Add-DnsServerResourceRecordA -Name "pc3" -ZoneName "midominio.local" -IPv4Address "192.168.10.12"
-Add-DnsServerResourceRecordA -Name "pc4" -ZoneName "midominio.local" -IPv4Address "192.168.10.13"
-Add-DnsServerResourceRecordA -Name "pc5" -ZoneName "midominio.local" -IPv4Address "192.168.10.14"
-```
 
-####  Crear Alias (CNAME)
-```powershell
-Add-DnsServerResourceRecordCName -Name "servidorweb" -ZoneName "midominio.local" -HostNameAlias "pc1.midominio.local"
+# Crear Alias (CNAME)
 Add-DnsServerResourceRecordCName -Name "archivos" -ZoneName "midominio.local" -HostNameAlias "pc2.midominio.local"
-```
 
-####  Crear los PTR en la zona inversa
-```powershell
+# Zona Inversa
+# Crear Zona Inversa
+Add-DnsServerPrimaryZone -NetworkID "10.0.2.0/24" -ReplicationScope Domain
+
+#  Crear los PTR en la zona inversa
 Add-DnsServerResourceRecordPtr -Name "10" -ZoneName "10.168.192.in-addr.arpa" -PtrDomainName "pc1.midominio.local"
-Add-DnsServerResourceRecordPtr -Name "11" -ZoneName "10.168.192.in-addr.arpa" -PtrDomainName "pc2.midominio.local"
-Add-DnsServerResourceRecordPtr -Name "12" -ZoneName "10.168.192.in-addr.arpa" -PtrDomainName "pc3.midominio.local"
-Add-DnsServerResourceRecordPtr -Name "13" -ZoneName "10.168.192.in-addr.arpa" -PtrDomainName "pc4.midominio.local"
-Add-DnsServerResourceRecordPtr -Name "14" -ZoneName "10.168.192.in-addr.arpa" -PtrDomainName "pc5.midominio.local"
 ```
 
+## Cambio de Dns (En caso de cambiar de dominio)
+```c
+Get-DnsServerZone
 
+# Elimina el anterior
+Remove-DnsServerZone -Name "cyber.local" -Force
+
+# Añadir nuevo dominio
+Add-DnsServerPrimaryZone -Name "pala.local" -ReplicationScope "Domain"
+Add-DnsServerPrimaryZone -Name "_msdcs.pala.local" -ReplicationScope Forest
+
+ipconfig /flushdns             # Borra la Cache
+ipconfig /registerdns         # Actualizar Registros del nombre del equipo
+
+Restart-Service DNS
+Restart-Service Netlogon
+
+# Verificar Netlogon (esto recrea los SRV)
+net stop netlogon  
+net start netlogon
+
+# Verifica que el DC se registre correctamente
+nltest /dsgetdc:pala.local
+nltest /dsregdns
+
+#Verificar registros críticos (esto es clave)
+nslookup pala.local
+nslookup -type=SRV _ldap._tcp.dc._msdcs.pala.local
+```

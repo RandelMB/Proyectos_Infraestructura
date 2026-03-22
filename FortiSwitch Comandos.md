@@ -9,6 +9,12 @@ get switch lldp settings             # Global LLDP configuration.
 get switch lldp stats                # LLDP port statistics.
 ```
 
+## Sniffer
+```sh
+diagnose netlink interface list                       # Nombre de las interfaces
+diagnose sniffer packet port_1 'port 80' 4            # Caputa del puerto 80
+diagnose sniffer packet port_14 '' 4                  # 
+```
 ## VLAN
 
 ```cs
@@ -26,7 +32,6 @@ set vlanid <vlan_id>
 next
 end
 
-
 # Borrar VLAN
 config switch vlan
 delete <vlan_id>
@@ -36,13 +41,13 @@ end
 ## Interfaces / Puertos
 
 ```cs
-# Ver estado de puertos
+//# Ver estado de puertos
 get switch interface
 get switch interface status
 get switch interface summary
 get switch physical-port
 
-# Configurar puerto
+//# Configurar puerto
 config switch interface
 edit <port>
 set description "Puerto"
@@ -52,7 +57,7 @@ set status up
 next
 end
 
-# Asignar puertos a VLAN
+//# Asignar puertos a VLAN
 config switch interface
 edit <port>
 set native-vlan <vlan_id>
@@ -60,14 +65,14 @@ set allowed-vlans <vlan_id>
 next
 end
 
-# Deshabilitar / habilitar
+//# Deshabilitar / habilitar
 config switch interface
 edit <port>
 set status down
 next
 end
 
-# Estadísticas
+//# Estadísticas
 get switch interface stats
 diagnose switch physical-port stats
 ```

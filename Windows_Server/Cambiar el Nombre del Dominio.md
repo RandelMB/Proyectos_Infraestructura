@@ -34,3 +34,34 @@ gpfixup /oldnb:CYBER /newnb:PALA
 # 8. Finalizar proceso
 rendom /end
 ```
+
+
+## Cambio de Dns
+```c
+# Elimina el anterior
+Remove-DnsServerZone -Name "cyber.local" -Force
+
+# Añadir nuevo dominio
+Add-DnsServerPrimaryZone -Name "pala.local" -ReplicationScope "Domain"
+Add-DnsServerPrimaryZone -Name "_msdcs.pala.local" -ReplicationScope Forest
+
+ipconfig /flushdns             # Borra la Cache
+ipconfig /registerdns         # Actualizar Registros del nombre del equipo
+
+Restart-Service DNS
+Restart-Service Netlogon
+
+# Verificar Netlogon (esto recrea los SRV)
+net stop netlogon  
+net start netlogon
+
+# Verifica que el DC se registre correctamente
+nltest /dsgetdc:pala.local
+
+#Verificar registros críticos (esto es clave)
+nslookup pala.local
+nslookup -type=SRV _ldap._tcp.dc._msdcs.pala.local
+```
+
+
+

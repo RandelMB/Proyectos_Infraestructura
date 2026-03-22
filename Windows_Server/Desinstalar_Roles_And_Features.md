@@ -9,7 +9,7 @@ Get-WindowsFeature
 Uninstall-ADDSDomainController
 
 # Si es el único DC (Recomendado)
-Uninstall-ADDSDomainController -ForceRemoval -DemoteOperationMasterRole
+Uninstall-ADDSDomainController -DemoteOperationMasterRole -ForceRemoval
 
 # Quitar AD DS
 Uninstall-WindowsFeature AD-Domain-Services

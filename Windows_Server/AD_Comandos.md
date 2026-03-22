@@ -1,4 +1,19 @@
 
+
+
+```sh
+# Instalar AD
+Install-ADDSForest -DomainName "pala.local"
+
+# 3. Método por PowerShell (más rápido)
+Uninstall-ADDSDomainController
+
+# Si es el único DC (Recomendado)
+Uninstall-ADDSDomainController -DemoteOperationMasterRole -ForceRemoval
+
+# Quitar AD DS
+Uninstall-WindowsFeature AD-Domain-Services
+```
 # TroubleShoting
 
 ```r

@@ -17,14 +17,16 @@ sudo systemctl restart xrdp
 
 ```
 
+# John the ripper
+```
+# Extraer Hash de archivo
+gpg2john UNICARIBE.txt.gpg > gpg_hash.txt
 
-
-
-
+# Usar John paracomparar hashes
+john --wordlist=rockyou.txt gpg_hash.txt
+```
+# Nmap
 ```sh
-
-
-
 ## 🔹 Comandos Básicos de Escaneo
 
 # Escaneo profundo de puerto

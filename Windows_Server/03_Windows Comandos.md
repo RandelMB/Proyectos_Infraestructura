@@ -275,8 +275,8 @@ Add-Computer -DomainName <nombre_del_dominio> -Restart
 
 # -eliminar usuario
 Remove-LocalUser -Name "Estudiante"
-
-# 
+#
+ 
 Add-LocalGroupMember -Group "Administrators" -Member "mercadeo"
 ```
 

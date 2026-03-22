@@ -1,5 +1,4 @@
 
-
 ```sh
 # EJECUCIÓN / SESIÓN
 saps powershell -Verb runas             # abre PowerShell como admin (abreviatura)
@@ -12,6 +11,30 @@ gcim Win32_OperatingSystem              # info OS (abreviado CIM)
 Get-CimInstance Win32_OperatingSystem   # forma completa
 ```
 
+```sh
+# USANDO saps (alias nativo)
+saps powershell -Verb runas
+
+# CREAR ALIAS  PARA apps y 
+Set-Alias pingloop "C:\scripts\pingloop.bat"
+
+# Agregar Alias Permanete (`\Users\[tu_usuario]\Documents\PowerShell\Microsoft.PowerShell_profile.ps1`)
+notepad $PROFILE                                    # agregalo en notepad
+
+# Si te da error (no existe), créalo:               
+New-Item -ItemType File -Path $PROFILE -Force  
+notepad $PROFILE
+. $PROFILE                                          # Guardalo
+
+# Acceso rapido a comandos
+function adminps {
+    Start-Process powershell -Verb RunAs
+}
+
+function mikro {
+    ssh -o MACs=hmac-sha1 -o Ciphers=aes128-cbc -o KexAlgorithms=+diffie-hellman-group1-sha1 usuario@10.0.0.50
+}
+```
 
 ```sh
 # PROCESOS
@@ -123,24 +146,19 @@ Get-WmiObject Win32_ComputerSystem     # completo
 wmic product get name                  # programas instalados (legacy)
 Get-Package                            # paquetes (PS moderno)
 
-# ================================
 # APAGADO / REINICIO
-# ================================
 shutdown /s /t 0                       # apagar
 shutdown /r /t 0                       # reiniciar
 
 Restart-Computer                       # reiniciar (PS)
 Stop-Computer                          # apagar (PS)
 
-# ================================
 # REMOTO
-# ================================
 Enter-PSSession -ComputerName PC1      # sesión remota
 Invoke-Command -ComputerName PC1 -ScriptBlock { hostname }
 
-# ================================
+
 # EJECUCIÓN DE SCRIPTS
-# ================================
 Set-ExecutionPolicy RemoteSigned       # permitir scripts
 .\script.ps1                           # ejecutar script
 
@@ -152,64 +170,8 @@ man Get-Process                        # alias
 Get-Command                            # listar comandos
 ```
 
-
-
-
 ```sh
-# USANDO saps (alias nativo)
-saps powershell -Verb runas
-
-# CREAR ALIAS  PARA COMANDOS
-Set-Alias adminps "Start-Process powershell -Verb RunAs"
-Set-Alias pingloop "C:\scripts\pingloop.bat"
-
-notepad $PROFILE                                    # agregalo en notepad
-# Si te da error (no existe), créalo:               # 
-New-Item -ItemType File -Path $PROFILE -Force  
-notepad $PROFILE
-. $PROFILE
-
-# =========================================
-# ABRIR NUEVA TERMINAL (pwsh si tienes PS7)
-# =========================================
-Start-Process pwsh -Verb RunAs
-
-# =========================================
-# EJECUTAR SCRIPT COMO ADMIN
-# =========================================
-Start-Process powershell -Verb RunAs -ArgumentList "-File C:\script.ps1"
-
-# =========================================
-# ONE-LINER SIN ALIAS
-# =========================================
-powershell -Command "Start-Process powershell -Verb RunAs"
-
-# =========================================
-# CMD → POWERSHELL ADMIN
-# =========================================
-powershell Start-Process powershell -Verb RunAs
-
-# =========================================
-# AUTOELEVACIÓN DENTRO DE SCRIPT
-# =========================================
-if (-not ([Security.Principal.WindowsPrincipal] `
-[Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole(`
-[Security.Principal.WindowsBuiltInRole]::Administrator)) {
-
-    Start-Process powershell "-File `"$PSCommandPath`"" -Verb RunAs
-    exit
-}
-
-# =========================================
-# GUARDAR ALIAS PERMANENTE
-# =========================================
-notepad $PROFILE
-# agregar dentro:
-Set-Alias adminps "Start-Process powershell -Verb RunAs"
-
-# =========================================
 # VER ALIAS EXISTENTES
-# =========================================
 Get-Alias
 gal
 
