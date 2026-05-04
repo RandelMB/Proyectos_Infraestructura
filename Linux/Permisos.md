@@ -1,9 +1,10 @@
 
 ![[Pasted image 20260322095413.png|699]]
 # Permisos y Propietarios
+
+## 👤 Gestión de Dueños (chown)
 ```sh
 # Ver permisos
-ls -l
 stat archivo
 
 # Conf de Dueños
@@ -22,6 +23,7 @@ chown -h usuario enlace_simbolico  # cambia dueño del symlink (no del archivo r
 chown -R --preserve-root /         # evita afectar la raíz completa (seguridad)
 ```
 
+## 🔐 Gestión de Permisos (chmod)
 ```sh
 chmod -R 750 /opt/ips-monitor    # dueño: rwx, grupo: r-x, otros: --- 
 chmod -R 755 /opt/ips-monitor    # dueño: rwx, grupo: r-x, otros: r-x (lectura/ejecución pública)
@@ -43,4 +45,19 @@ chmod 444 archivo.txt           # solo lectura para todos
 chmod 000 archivo.txt           # nadie puede leer, escribir ni ejecutar
 chmod -R u+rwX,g+rX,o-rwx /opt/ips-monitor  
 # dueño: lectura/escritura (+ejecución si ya era directorio o ejecutable), grupo: lectura/ejecución, otros: sin acceso
+```
+
+## 🐳 Permisos en Docker
+```sh
+#### Permisos para archivos en docker
+UID 100 → usuario root                              # Usuario dentro del contenedor
+GID 100 → grupo root                                # Grupo dentro del contenedor 
+
+docker exec -it container sh                        # se accede al contenedor
+id                                                  # se verifican los id
+
+uid=100(root) gid=100(root) groups=100(root)        # veras algo como esto
+
+chmod 600 certs/certificado.key                     # Le quias los permisos al grupo y se los dejas al usuario
+chown 100:100 certs/certificado.key                 # le das los permisos al id que este usando 
 ```

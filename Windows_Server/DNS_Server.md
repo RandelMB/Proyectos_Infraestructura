@@ -24,6 +24,14 @@ Add-DnsServerPrimaryZone -NetworkID "10.0.2.0/24" -ReplicationScope Domain
 Add-DnsServerResourceRecordPtr -Name "10" -ZoneName "10.168.192.in-addr.arpa" -PtrDomainName "pc1.midominio.local"
 ```
 
+### Buscar DNS
+```powershell
+Resolve-DnsName -Name "tu-dominio.com" -Type ANY | Where-Object { $_.Name -like "*fbv-*" }
+
+Get-DnsServerResourceRecord -ZoneName "ejemplo.com.do" |
+Where-Object { $_.HostName -like "fbv-*" }
+```
+
 ## Cambio de Dns (En caso de cambiar de dominio)
 ```c
 Get-DnsServerZone

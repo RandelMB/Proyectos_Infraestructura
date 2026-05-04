@@ -2,18 +2,13 @@
 
 Ejemplo básico de **VPN IPsec site-to-site en CLI** en un **FortiGate**.  
 Variables de ejemplo:
-
 - Interfaz WAN: `port1`
 - IP pública remota: `1.1.1.1`
 - Red local: `192.168.1.0/24`
 - Red remota: `192.168.2.0/24`
 - PSK: `ClaveVPN123`
-    
-
 ---
-
 # 1. Phase1 (IKE)
-
 ```
 config vpn ipsec phase1-interface
     edit "Pfsense-P1"
@@ -47,7 +42,6 @@ end
 ---
 
 # 3. Rutas estáticas
-
 ```
 config router static
     edit 1
@@ -58,9 +52,7 @@ end
 ```
 
 ---
-
 # 4. Políticas de firewall
-
 ```
 config firewall policy
     edit 1
@@ -88,22 +80,15 @@ config firewall policy
     next
 end
 ```
-
 ---
-
 # 5. Verificar VPN
-
 ```
 get vpn ipsec tunnel summary
 diagnose vpn tunnel list
 ```
-
 ---
 
 Si quieres, puedo darte también:
-
-- **plantilla genérica para copiar y solo cambiar IPs**
-    
-- **ejemplo FortiGate ↔ FortiGate**
-    
+- **plantilla genérica para copiar y solo cambiar IPs**    
+- **ejemplo FortiGate ↔ FortiGate**    
 - **ejemplo FortiGate ↔ Cisco / Mikrotik / Palo Alto**.

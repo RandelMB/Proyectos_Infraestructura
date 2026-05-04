@@ -1,57 +1,3 @@
----
-tags:
----
-#### Agregar certificado digital a ubuntu
-```sh
-cp firewall.crt /usr/local/share/ca-certificates/firewall.crt
-chmod 644 /usr/local/share/ca-certificates/firewall.crt          # Permisos correctos
-openssl x509 -in /usr/local/share/ca-certificates/firewall.crt -text | grep CA:  #validar CA
-update-ca-certificates                                           # actualiza los certificados
-```
-
-#### HTTP-01 Challege - +
-```python
-# Abrir puerto 80 en el modem
-# Crear registro que apunte a tu ip publica
-
-# Validar Ip Publica
-curl portquiz.net
-
-#validar que este llegando a tu ip publica
-nslookup adguard.ejemplo.net
-
-#abrir puertos para recepcion
-iptables -I INPUT -i eth0 -p tcp --dport 80 -j ACCEPT
-iptables -D INPUT 1
-
-# comando para solicitud de certificado
-sudo certbot certonly --standalone -d adguard.ejemplo.net
-```
-### <font color="#9bbb59"> Archivos de certificado</font>
-```
-/etc/letsencrypt/live/ejemplo.net/fullchain.pem
-/etc/letsencrypt/live/ejemplo.net/privkey.pem
-
-Certificate is saved at: /etc/letsencrypt/live/adguard.ejemplo.net/fullchain.pem
-Key is saved at:         /etc/letsencrypt/live/adguard.ejemplo.net/privkey.pem
-```
-## Generar la clave SSH desde Window
-```python
-# --GENERADOR DE LLAVES (SELECCIONA 1)-- #
-ssh-keygen -t rsa -b 4096 -C "ejemp@ejemplo.com"
-ssh-keygen -t ecdsa -b 521 -f ~/.ssh/id_ecdsa_521
-ssh-keygen -t ed25519 -f ~/.ssh/id_ed25519
-
-# --
-type $env:USERPROFILE\.ssh\id_rsa.pub
-
-# -- EN UBUNTU --#
-chmod 700 ~/.ssh/authorized_keys
-
-nano ~/.ssh/authorized_keys
-sudo systemctl restart ssh
-```
-
 ## Formatos
 
 | Formato           | Extensión típica                                             | Usado por / compatibilidad            | Comentario                                                                        |
@@ -63,9 +9,6 @@ sudo systemctl restart ssh
 | **PKCS#12 / PFX** | `.p12`, `.pfx`                                               | Windows, OpenSSL                      | Contiene certificado + clave privada + cadena completa, usado para TLS/SSL.       |
 | **CER / CRT**     | `.cer`, `.crt`                                               | Windows, Linux                        | Certificados públicos; no contienen la clave privada.                             |
 | **DER**           | `.der`                                                       | Java, OpenSSL                         | Formato binario de certificado; alternativa a PEM.                                |
-|                   |                                                              |                                       |                                                                                   |
-
-#### Casos de uso
 
 | Caso                             | Formato requerido            | ¿Qué contiene?                                                                                                         | ¿Por qué el aplicativo lo exige?                                                                                       | Ejemplos típicos                       |
 | -------------------------------- | ---------------------------- | ---------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- | -------------------------------------- |
@@ -76,7 +19,6 @@ sudo systemctl restart ssh
 | **Automatización / DevOps**      | **PEM**                      | Archivos separados                                                                                                     | Facilita automatización, versionado y permisos granulares.                                                             | Kubernetes, Docker, CI/CD              |
 | **Autenticación cliente (mTLS)** | **PKCS#12 o PEM**            | Clave + cert cliente                                                                                                   | Depende del stack: browsers y SO prefieren PKCS#12; servidores prefieren PEM.                                          | Browsers, VPNs, APIs                   |
 
-#### Formato 
 
 | Formato           | Extensión              | Estándar         | Contenido                   | Codificación                  | Uso Común                     |
 | ----------------- | ---------------------- | ---------------- | --------------------------- | ----------------------------- | ----------------------------- |
@@ -86,9 +28,7 @@ sudo systemctl restart ssh
 | PEM Key           | .key / .pem            | PKCS#8           | Clave privada               | PEM (Base64)                  | Servidores web (Nginx/Apache) |
 | PKCS#12           | .pfx / .p12            | PKCS #12         | Cert + clave privada        | Binario (protegido con clave) | Exportar certificados Windows |
 | PKCS#7            | .p7b                   | PKCS #7          | Solo cadena de certificados | PEM (Base64)                  | Instalación de certificados   |
-| Certificado DER   | .der                   | x.509            | Clave Publica + ID          | DER (Binario)                 | Intercambio de certificados   |
-
-#### Algoritmos de SSH
+|                   |                        |                  |                             |                               |                               |
 
 | Algoritmo  | Seguridad  | Compatibilidad                | Recomendación             |
 | ---------- | ---------- | ----------------------------- | ------------------------- |
@@ -96,123 +36,101 @@ sudo systemctl restart ssh
 | RSA (4096) | Alta       | Excelente (universal)         | Opción segura de respaldo |
 | ECDSA      | Media/Alta | Buena                         | Solo si Ed25519 falla     |
 | DSA        | Baja       | Mala (desactivado)            | No usar                   |
-# Generar Certificados en Windows
-
-##### Instala Open SSL con winget
-```
-    > winget install --id FireDaemon.OpenSSL
-    > winget install --id ShiningLight.OpenSSL.Dev
-    > winget install --id ShiningLight.OpenSSL.Light
-```
 
 
-```python
-# Generar clave privada
-openssl genrsa -out idrac.key 2048
+```sh
+# 🔐 VARIABLES (MODIFICA AQUÍ)
+ =========================
+ALGO=rsa                    # rsa | ed25519 | ecdsa
+BITS=2048                   # tamaño (solo RSA/ECDSA)
+NAME=clave                  # nombre base
+PASS="123456"               # passphrase
+DAYS=365                    # días del certificado
+SUBJ="/C=DO/ST=SD/L=SD/O=Lab/OU=IT/CN=example.com"
 
-# Generar CSR (Solicitud de Certificado)
-openssl req -new -key idrac.key -out idrac.csr
-```
-
-
-```python
-# convertir a PKCS#12 si esta en (.pem)
-openssl pkcs12 -export -out idrac.pfx -inkey idrac.key -in idrac.pem
-
-# Si esta en PKCS#7 (.p7b) 
-openssl pkcs7 -print_certs -in certificado.p7b -out certificado.pem
-
-# Si está en DER (.cer)
-openssl x509 -inform der -in certificado.cer -out certificado.pem
+PRIV=$NAME.pem              # clave privada PEM
+PUB=$NAME.pub               # clave pública
+CERT=$NAME.crt              # certificado
+PFX=$NAME.pfx               # contenedor PFX
+DER=$NAME.der               # certificado DER
+PPK=$NAME.ppk               # clave PuTTY
 
 
-# te pedira pass
 
-Enter Export Password:
-Verifying - Enter Export Password:
-```
+# 🔐 1. CREAR CLAVE (OpenSSH)
+ssh-keygen -t $ALGO -b $BITS -f $NAME -N "$PASS" -C "lab@test"
+# salida:
+# $NAME        → privada (OpenSSH)
+# $NAME.pub    → pública
 
-# Mediante Letsencript con cerbot en Linux
 
-#### Lo primero es Crear API Token en Cloudflare o cualquier otro 
+# 🔄 2. CONVERTIR OpenSSH → PEM
+ssh-keygen -p -m PEM -f $NAME -N "$PASS"
 
-```python
-# Crear archivo de credenciales - En un linux
-nano cloudflare.ini
 
-# con esto:
-dns_cloudflare_api_token = TU_TOKEN_
+# 🔐 3. CREAR CLAVE PEM (OpenSSL)
+openssl genpkey -algorithm RSA -out $PRIV -aes-256-cbc -pass pass:$PASS
 
-# Proteger permisos:
-chmod 600 cloudflare.ini
 
-# Generar certificado DNS-01 automático
-sudo certbot certonly \  
---dns-cloudflare \  
---dns-cloudflare-credentials cloudflare.ini \  
--d idrac.tudominio.org
+# 🔐 4. PKCS#8 (formato estándar moderno)
+openssl pkcs8 -topk8 -in $PRIV -out ${NAME}_pkcs8.pem \
+-v2 aes-256-cbc -passin pass:$PASS -passout pass:$PASS
 
-# Creará automáticamente el registro TXT `_acme-challenge`
-# tu certificado tiene que estar en:
-/etc/letsencrypt/live/idrac.ejemplo.org/
-```
 
-### Puedes convertirlo desde le Linux o desde Windows
+# 🔐 5. CREAR CERTIFICADO (CRT)
+openssl req -x509 -newkey rsa:$BITS \
+-keyout $PRIV -out $CERT -days $DAYS \
+-subj "$SUBJ" -passout pass:$PASS
 
-```python
-# linux:
+
+# 🔐 6. CREAR PFX / P12 (todo en uno)
 openssl pkcs12 -export \
--out idrac.pfx \
--inkey privkey.pem \
--in fullchain.pem
+-out $PFX \
+-inkey $PRIV \
+-in $CERT \
+-passin pass:$PASS \
+-passout pass:$PASS
 
-# Windows
-openssl pkcs12 -export -out idrac.pfx -inkey privkey.key -in fullchain.pem
+# 🔐 7. CONVERTIR PEM → DER
+openssl x509 -in $CERT -outform der -out $DER
 
-# te pedira pass
-Enter Export Password:
-Verifying - Enter Export Password:
-```
+# 🔐 8. CONVERTIR A PPK (PuTTY)
+puttygen $PRIV -o $PPK -O private -P
 
-# DNS-01 Proxmox
-```bash
-### 1. Crear rutas necesarias
-mkdir -p /etc/pve/priv/acme/dnsapi
-mkdir -p /etc/pve/acme
+# 🔍 9. VER INFORMACIÓN
+file $PRIV
+openssl rsa -in $PRIV -text -noout -passin pass:$PASS
+openssl x509 -in $CERT -text -noout
 
-# Descargar el plugin de GoDaddy
-curl -o /etc/pve/priv/acme/dnsapi/dns_gd.sh https://raw.githubusercontent.com/acmesh-official/acme.sh/master/dnsapi/dns_gd.sh
 
-# Crear archivo con credenciales GoDaddy
-nano /etc/pve/priv/acme/godaddy.conf
+# 🔄 CONVERSIONES RÁPIDAS
+ =========================
+# OpenSSH → PEM
+ssh-keygen -p -m PEM -f $NAME
+# PEM → PPK
+puttygen $PRIV -o $PPK
+# PEM → PFX
+openssl pkcs12 -export -out $PFX -inkey $PRIV -in $CERT
+openssl pkcs12 -export -out $PFX -inkey $PEM -in $PEM
+# PEM → DER
+openssl x509 -in $CERT -outform der -out $DER
 
-# Contenido:
-GODADDY_API_KEY="tu_api_key"
-GODADDY_API_SECRET="tu_api_secret"
 
-# Instalar acme.sh
-apt update
-apt install socat curl -y
-curl https://get.acme.sh | sh
 
-# Registrar la cuenta en Let’s Encrypt
-~/.acme.sh/acme.sh --register-account -m Carlos@ejemplo.net --server letsencrypt
+# 🔓 CRACKING (SI TIENE PASS)
+ssh2john $NAME > hash.txt
+john --wordlist=rockyou.txt hash.txt
 
-# Comprobar
-~/.acme.sh/acme.sh --info
 
-# 6. Solicitar certificado wildcard usando DNS-01
-~/.acme.sh/acme.sh --issue --dns dns_gd -d ejemplo.net -d '*.ejemplo.net' --server letsencrypt
 
-#Instalar certificado en Proxmox
-cp ~/.acme.sh/ejemplo.net_ecc/fullchain.cer /etc/pve/nodes/proxmox/pve-ssl.pem
-cp ~/.acme.sh/ejemplo.net_ecc/ejemplo.net.key /etc/pve/nodes/proxmox/pve-ssl.key
-systemctl restart pveproxy
-
-#Renovación automática
-~/.acme.sh/acme.sh --renew -d ejemplo.net --dns dns_gd --server letsencrypt
-
-# en caso de que tenga que forzar la renovación:
-~/.acme.sh/acme.sh --renew -d ejemplo.net --dns dns_gd --force --server letsencrypt
+# 🔥 RESUMEN
+ =========================
+# OpenSSH  → SSH (id_rsa, id_ed25519)
+# PEM      → formato universal (texto base64)
+# PKCS#8   → estándar moderno (privadas)
+# PPK      → PuTTY
+# PFX/P12  → clave + certificado + CA
+# CRT/CER  → certificado público
+# DER      → binario
 ```
 

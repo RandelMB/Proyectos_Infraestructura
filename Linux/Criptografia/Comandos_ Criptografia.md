@@ -1,4 +1,14 @@
 
+| Firma              | Significa | Qué usar           |
+| ------------------ | --------- | ------------------ |
+| `Salted__`         | OpenSSL   | `openssl enc`      |
+| `-----BEGIN PGP`   | GPG       | `gpg`              |
+| `PK`               | ZIP       | `unzip / zip2john` |
+| `7z`               | 7zip      | `7z`               |
+| texto raro legible | base64    | `base64 -d`        |
+
+
+
 ```csharp
 // ======================= 🔐 CIFRADO =======================
 gpg --symmetric --cipher-algo AES256 secreto.txt        // Cifra archivo con AES256 usando contraseña
@@ -16,13 +26,14 @@ echo -n "P@ssw0rd" | base64                           // Codifica sin salto de l
 xxd -p archivo.txt // Convierte a hex  
 xxd -p archivo.txt > archivo.hex // Guarda en hex
 
-openssl enc -aes-256-cbc -salt -in archivo.txt -out archivo.enc //  ENCRIPTAR a .enc (AES-256)
+openssl enc -aes-256-cbc -salt -in ojo.jpeg -out Imagen.enc //  ENCRIPTAR a .enc (AES-256)
 openssl enc -aes-256-cbc -salt -pbkdf2 -iter 100000 -in archivo.txt -out archivo.enc // Cifra más seguro
 
 // ======================= 🔓 DESCIFRADO =======================
 gpg --output secreto_recuperado.txt --decrypt secreto.txt.gpg   // Descifra archivo GPG
 gpg --output secreto_recuperado1.txt --decrypt secreto_recuperado.txt.gpg   // Descifra otro archivo
 
+base64 -d archivo.b64 > archivo.txt                 // Decodificar de Base64
 echo "VGV4dG8=" | base64 -d                         // Decodifica Base64
 echo "Guvf vf zl frperg zrffntr" | tr 'A-Za-z' 'N-ZA-Mn-za-m'   // Decodifica ROT13
 
@@ -37,16 +48,21 @@ stegseek mlb.jpg rockyou.txt                       // Rompe steghide rápido
 openssl enc -aes-256-cbc -d -in archivo.enc -out archivo.txt // Descifra   
 openssl enc -aes-256-cbc -d -pbkdf2 -iter 100000 -in Imagen.enc -out Imagen.jpg // Descifra (si usaste pbkdf2)  
 
-// Bucle wile para ataque de fuerza bruta 
+
+// Bucle wile para ataque de fuerza bruta (Enc despues file para el tipo)
 while read pass; do
-  openssl enc -aes-256-cbc -d -in Imagen.enc -out Imagen.jpg -pass pass:$pass 2>/dev/null && echo "Contraseña encontrada: $pass" && break
+  openssl enc -aes-256-cbc -d -in Imagen.enc -out out -pass pass:$pass 2>/dev/null && echo "Contraseña encontrada: $pass" && break
 done < rockyou.txt
 
+if file img.jpeg | grep -vq "data"; then
+  echo "PASS: $pass"
+  break
+fi
 
 
 //------------------------------- CREAR BIBLIOTECA ----------------------------------
 crunch 8 8 abc123 -o biblioteca.txt                 // combinaciones de 8 chars (limitado)
-crunch 6 6 "1234" -o biblioteca.txt                 // combinaciones de 8 chars (limitado)
+crunch 5 5 "0123456789" -o diccionario.txt                 // combinaciones de 8 chars (limitado)
 crunch 6 8 0123456789 -o numeros.txt               // números de 6 a 8 dígitos
 crunch 6 8 abc123 -o simple.txt                    // letras + números básicos
 tr -dc '1-9' < /dev/urandom | fold -w 6 | head -n 1000 > claves.txt // 1000 claves aleatorias de 6 dígitos
@@ -84,64 +100,6 @@ strings vpnuser.key | grep user                   // Busca "user"
 xxd vpnuser.key                                   // Ver en hex
 xxd -l 200 vpnuser.key                            // Primeros 200 bytes
 xxd -r archivo.hex > archivo.bin                  // Reconstruye binario
-hexdump -C vpnuser.key | less                     // Vista detallada hex
-od -c vpnuser.key                                 // Vista en caracteres
-od -x vpnuser.key                                 // Vista en hex
-
-// Información
-stat vpnuser.key                                  // Metadata completa
-ls -lh vpnuser.key                                // Tamaño legible
-ls -la vpnuser.key                                // Permisos y ocultos
-
-// Búsqueda
-grep "password" vpnuser.key                       // Busca texto
-grep -i "user" vpnuser.key                        // Ignora mayúsculas
-grep -r "password" .                              // Busca recursivo
-
-// Integridad
-md5sum archivo                                    // Hash MD5
-sha1sum archivo                                   // Hash SHA1
-sha256sum archivo                                 // Hash SHA256
-sha512sum archivo                                 // Hash SHA512
-
-// Entropía
-ent vpnuser.key                                   // Mide aleatoriedad (detecta cifrado)
-
-// METADATA avanzada
-exiftool vpnuser.key                              // Metadata
-exiftool -a vpnuser.key                           // Todo duplicado
-exiftool -u vpnuser.key                           // Campos ocultos
-exiftool corrupta.zip                             // Intenta leer metadatos en ZIP  
-zipinfo corrupta.zip                              // Muestra estructura interna del ZIP
-exiftool -Comment="UEBzc3cwcmQK" nba.jpg          // Inserta comentario codificado  
-exiftool --info nba.jpg                           // Muestra info extendida  
-exiftool nba.jpg | grep Comment                   // Filtra comentario
-
-// Imágenes
-identify -verbose corrupta.jpeg                   // Info completa de imagen
-
-// Análisis binario
-binwalk vpnuser.key                               // Detecta archivos embebidos
-binwalk -e vpnuser.key                            // Extrae contenido
-binwalk --dd='.*' vpnuser.key                     // Extrae todo
-
-// Hash cracking
-hashid corrupta.jpeg                              // Identifica tipo de hash
-gpg2john txt.txt.gpg > hash.txt                   // Convierte GPG a hash
-john --wordlist=rockyou.txt hash.txt              // Ataque diccionario
-
-// Comparación
-diff archivo1 archivo2                            // Compara archivos
-
-// VISUALIZACIÓN / IMÁGENES  
-display nba // Abre imagen  
-display nba.jpg // Abre imagen específica
-
-// 🔹 MAT2 (limpieza forense)  
-mat2 nba.jpg // Limpia metadatos  
-mat2 -s nba.jpg // Modo silencioso  
-mat2 -v nba.jpg // Modo verbose  
-mat2 -L nba.jpg // Lista formatos soportados
 
 // =======================  ESTEGANOGRAFÍA =======================
 
@@ -162,6 +120,8 @@ foremost -i vpnuser.key                           // Especifica input
 wget https://github.com/brannondorsey/naive-hashcat/releases/download/data/rockyou.txt   // Descarga diccionario
 
 // ======================= 📦 CIFRADO ZIP (AVANZADO / ALTERNATIVAS) =======================
+
+
 
 zip -er backup_seguro.zip carpeta/                // Crea ZIP cifrado (AES en versiones modernas)
 zip -e secreto2.zip secreto2.txt                  // Crear ZIP con contraseña

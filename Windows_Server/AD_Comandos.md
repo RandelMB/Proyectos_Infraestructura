@@ -72,3 +72,33 @@ New-ADGroup -Name "Seguridad_Tecnologia" -GroupScope Global -GroupCategory Secur
 # 4. Crear 5 grupos de distribución
 New-ADGroup -Name "Distribucion_GestionHumana" -GroupScope Global -GroupCategory Distribution -Path "OU=Pala Pizza,DC=pala,DC=local"
 ```
+
+# SESIONES RDP / USUARIOS
+```bash
+quser /server:<IP_SERVIDOR>                    # listar sesiones activas en servidor remoto (RDP/terminal)
+logoff <ID_SESION> /server:<IP_SERVIDOR>       # cerrar sesión específica por ID
+
+# -------- DETALLE SESIONES -----------
+qwinsta /server:<IP_SERVIDOR>                  # ver sesiones con más detalle
+query user /server:<IP_SERVIDOR>               # alternativa a quser
+
+# -------- VERIFICACION -----------
+quser /server:<IP_SERVIDOR> | findstr <USUARIO>   # confirmar usuario conectado
+```
+
+# BUSCAR USUARIO EN ACTIVE DIRECTORY
+```bash
+# -------- BUSQUEDA BASICA -----------
+dsquery user -name "<USUARIO>"                 # buscar por nombre
+dsquery user -samid <USUARIO>                  # buscar por login (sAMAccountName)
+
+# -------- DETALLE USUARIO -----------
+dsget user "CN=<USUARIO>,OU=<OU>,DC=<DOMINIO>,DC=<LOCAL>" -display -email -memberof   # info completa
+
+# -------- ALTERNATIVA POWERSHELL -----------
+powershell "Get-ADUser -Filter 'Name -like \"*<USUARIO>*\"' | Select Name,SamAccountName"   # buscar usuario
+powershell "Get-ADUser <USUARIO> -Properties *"   # detalle completo
+
+# -------- VERIFICACION -----------
+dsquery user -samid <USUARIO>                 # confirmar existencia
+```
