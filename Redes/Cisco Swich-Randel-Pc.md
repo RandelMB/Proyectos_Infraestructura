@@ -1,4 +1,4 @@
-# CONFIGURAR SNMPv2 CISCO  
+# CONFIGURAR SNMP CISCO 
 ```bash
 configure terminal                          # entrar a configuracion
 
@@ -64,11 +64,8 @@ snmp-server server                                 # Habilitar servicio SNMP
 snmp-server view ALL iso included                  # Crear vista completa
 snmp-server group NMS-GRP v3 priv read ALL         # Crear grupo SNMPv3 con auth+priv
 snmp-server engineid remote 172.40.5.8 800000090300A1B2C3D4E5 # Registrar EngineID remoto manualmente  
-snmp-server engineID local 800000090300DEADBEEF1122  # Autenticacion local
-
 snmp-server user snmpv3 NMS-GRP v3 auth sha256 'ClaveAuth123' priv aes 'ClavePriv123' remote 172.40.5.8 # Crear usuario remoto SNMPv3
-snmp-server user snmpv3 NMS-GRP v3 auth sha256 'AuthP@ss123!' priv aes 128 'PrivP@ss123!' # usuario local SNMPv3
-snmp-server user snmpv3 NMS-GRP v3 auth sha256 'AuthP@ss123!' priv 'PrivP@ss123!' # usuario local SNMPv3
+
 snmp-server host 172.x.x.x version 3p priv snmpv3 # Configurar destino traps SNMPv3
 snmp-server enable traps                           # Habilitar traps SNMP
 snmp-server trap authentication                    # Habilitar trap por fallo autenticación
@@ -82,7 +79,7 @@ write memory                                       # Guardar configuración
 # VERIFICAR CONFIGURACION
 ```bash
 show snmp                                          # Ver estado general SNMP
-show running-config | include snmp                 # Ver configuración SNMP activa
+show running-config | include snmp                # Ver configuración SNMP activa
 
 show snmp user                                     # Ver usuarios SNMPv3
 show snmp group                                    # Ver grupos SNMPv3

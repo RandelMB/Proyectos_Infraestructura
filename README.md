@@ -1,6 +1,40 @@
 ---
 tags:
 ---
+## 🧱 Infraestructura & OS
+![Linux](https://img.shields.io/badge/Linux-000000?style=for-the-badge&logo=linux)
+![Networking](https://img.shields.io/badge/Networking-00599C?style=for-the-badge&logo=cisco)
+![Virtualization](https://img.shields.io/badge/Virtualization-555555?style=for-the-badge)
+
+## 🔐 Security & Access
+![Security](https://img.shields.io/badge/Security-8B0000?style=for-the-badge)
+![SSH](https://img.shields.io/badge/SSH-000000?style=for-the-badge)
+![Encryption](https://img.shields.io/badge/Encryption-2E8B57?style=for-the-badge)
+
+## 🌐 DNS & Certificantes
+![DNS](https://img.shields.io/badge/DNS-1E90FF?style=for-the-badge)
+![SSL/TLS](https://img.shields.io/badge/SSL--TLS-228B22?style=for-the-badge)
+![Let's Encrypt](https://img.shields.io/badge/Let's_Encrypt-F68212?style=for-the-badge&logo=letsencrypt)
+![Certbot](https://img.shields.io/badge/Certbot-003A8F?style=for-the-badge)
+![OpenSSL](https://img.shields.io/badge/OpenSSL-721412?style=for-the-badge)
+
+## ☁️ Cloud & Providers
+![Cloudflare](https://img.shields.io/badge/Cloudflare-F38020?style=for-the-badge&logo=cloudflare)
+![API](https://img.shields.io/badge/API-4B0082?style=for-the-badge)
+
+## 🖥️ Virtualization & Platforms
+![Proxmox](https://img.shields.io/badge/Proxmox-E57000?style=for-the-badge)
+![Containers](https://img.shields.io/badge/Containers-2496ED?style=for-the-badge&logo=docker)
+
+## ⚙️ DevOps & Automation
+![DevOps](https://img.shields.io/badge/DevOps-0A0A0A?style=for-the-badge)
+![Automation](https://img.shields.io/badge/Automation-6A5ACD?style=for-the-badge)
+![CI/CD](https://img.shields.io/badge/CI--CD-222222?style=for-the-badge)
+
+## 📊 Project Metadata
+![Level](https://img.shields.io/badge/Level-Advanced-blue?style=for-the-badge)
+![Focus](https://img.shields.io/badge/Focus-Infrastructure-critical?style=for-the-badge)
+![Status](https://img.shields.io/badge/Status-Production-green?style=for-the-badge)
 #### HTTP-01 Challege - +
 ```python
 # Abrir puerto 80 en el modem

@@ -281,4 +281,111 @@ get switch mac-address-table static
 execute switch clear mac-address-table
 ```
 
-Si quieres, te hago otro bloque igual pero de **FortiGate (más útil si estás usando FortiLink con el switch)** o uno más enfocado a **troubleshooting real (lo que de verdad se usa en producción)**.
+
+# HABILITAR VLAN DE ADMINISTRACION HACIA CPU/INTERNAL
+```bash
+config switch interface
+
+edit internal
+set allowed-vlans 200      # permitir VLAN administración hacia CPU
+next
+
+end
+```
+## CREAR INTERFAZ L3/SVI DE ADMINISTRACION
+```bash
+config system interface
+
+edit "Admininstracion"
+set ip 172.25.200.45 255.255.255.0
+set vlanid 200
+set interface "internal"
+set allowaccess ping https ssh snmp
+set alias "SW-CLUSTER-FIREWALL"
+
+next
+end
+```
+## CONFIGURAR RUTA DEFAULT
+```bash
+config router static
+
+edit 1
+set dst 0.0.0.0 0.0.0.0
+set gateway 172.25.200.1
+set device "Admininstracion"
+
+next
+end
+```
+## HABILITAR ACCESO ADMINISTRATIVO
+```bash
+config system interface
+
+edit "Admininstracion"
+set allowaccess ping https http ssh snmp
+
+next
+end
+```
+## VALIDACION
+```bash
+show switch interface
+show system interface
+get router info routing-table all
+execute ping 172.25.200.1
+```
+
+# CONFIGURAR USUARIO SNMPv3 EN FORTISWITCH
+```bash
+config system snmp user
+
+edit "1"
+
+set security-level auth-priv      # autenticación + cifrado
+set auth-proto sha                # algoritmo autenticación
+set auth-pwd CLAVE-AUTH           # password auth
+set priv-proto aes                # cifrado AES
+set priv-pwd CLAVE-PRIV           # password cifrado
+
+set queries enable                # permitir consultas SNMP
+set query-port 161                # puerto SNMP
+
+next
+end
+```
+## CONFIGURAR HOST DESTINO PARA TRAPS
+```bash
+config system snmp user
+
+edit "1"
+
+set notify-hosts 172.25.200.40   # servidor SNMP/Observium/Zabbix
+set events cpu-high mem-low log-full intf-ip
+
+next
+end
+```
+## HABILITAR SNMP EN INTERFAZ ADMIN
+```bash
+config system interface
+
+edit "Admininstracion"
+set allowaccess ping https ssh snmp
+
+next
+end
+```
+## VALIDAR CONFIGURACION
+```bash
+show system snmp user
+show system interface
+```
+## PROBAR DESDE LINUX / OBSERVIUM
+```bash
+snmpwalk -v3 -u 1 \
+-l authPriv \
+-a SHA -A CLAVE-AUTH \
+-x AES -X CLAVE-PRIV \
+172.25.200.45
+```

@@ -25,6 +25,3 @@ ip a                                               # buscar interfaz ztXX  (IP t
 ssh user@10.x.x.x                               # conectarse al WSL usando IP de ZeroTier
 ```
 
-```
-Script
-```

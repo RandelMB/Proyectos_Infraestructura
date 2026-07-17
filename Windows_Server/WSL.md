@@ -1,6 +1,13 @@
 
-# WSL (GESTIÓN Y OPERACIÓN)------------
-Explicación mínima: instalación, control de distros, backup, red e integración Windows↔WSL.
+# WSL
+```sh
+\\wsl$                               # acceso desde windows
+wsl -l -v                            # listar distros
+wsl                                  # iniciar distro
+wsl -d Ubuntu                        # ejecutar comando
+wsl --shutdown                       # apagar wsl
+```
+## WSL (GESTIÓN Y OPERACIÓN)
 ```bash
 # VERIFICACIÓN
 wsl --list                                         # listar distros instaladas
@@ -103,8 +110,7 @@ Register-ScheduledTask -TaskName "AutoStartWSL" -Action $Action -Trigger $Trigge
 ```
 
 
-# HABILITAR PASSWORD AL ENTRAR A WSL---
-
+# HABILITAR PASSWORD AL ENTRAR A WSL
 ```bash
 # ----------CONFIGURAR USUARIO POR DEFECTO ROOT------------
 wsl -u root                                   # entrar como root
@@ -114,16 +120,8 @@ nano /etc/wsl.conf                            # editar config
 [boot]
 command="exec /bin/login -f USUARIO"          # forzar login con password
 
-# ----------ASIGNAR PASSWORD------------
-passwd USUARIO                                # definir contraseña del usuario
-
-# ----------REINICIAR WSL------------
-exit                                          # salir
 wsl --shutdown                                # reiniciar WSL
 wsl --terminate
-
-# ----------VERIFICACION------------
-wsl                                           # debe pedir contraseña
 ```
 
 # 
